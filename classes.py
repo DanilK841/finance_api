@@ -8,6 +8,9 @@ class UserResponse(BaseModel):
     name: str
 
     model_config = ConfigDict(from_attributes=True)
+
+# позволяет создавать объект на основе объекта из бд?
+
 class UserCreate(BaseModel):
     name: str
     password: str

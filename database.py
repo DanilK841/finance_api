@@ -28,6 +28,8 @@ class TransactionTypes(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     transactions = relationship('Transactions', back_populates='transaction_types')
 
+# а где и как хранится поле transactions
+# на что влияет параметр back_populates. оно должно строго совпадать с названием таблицы с которой устанавливается связь?
 class Transactions(Base):
     __tablename__ = "transactions"
 
@@ -47,11 +49,14 @@ sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 connect_args = {"check_same_thread": False}
+# использовал без понимания. тут про подключение. по умолчанию может коннектится только тот кто сооздал, а этот параметр отключает такое поведение
 engine = create_engine(sqlite_url, connect_args=connect_args)
 
 def create_db_and_tables():
     Base.metadata.create_all(engine)
 
+# тут бы проговорить что происходит
+# каким-то образом происходит подключение к бд видимо
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 def get_db():
     db = SessionLocal()

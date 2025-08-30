@@ -13,16 +13,9 @@ def on_startup():
     create_db_and_tables()
 
 
-@app.get("/")
-async def root1():
-    return {"message": "Hello World"}
-
-@app.get("/items/{item_id}")
-async def read_item(item_id:int):
-    return {"item_id": item_id}
-
-
 @app.post("/user/", response_model=UserResponse)
+# как правильно описать процесс который тут вызван
+# session: Session = Depends(get_db)
 def create_user(user: UserCreate, session: Session = Depends(get_db)):
     db_user = Users(
         name=user.name,
