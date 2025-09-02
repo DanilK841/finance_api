@@ -26,10 +26,12 @@ class TransactionTypes(Base):
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
     transactions = relationship('Transactions', back_populates='transaction_types')
 
 # а где и как хранится поле transactions
 # на что влияет параметр back_populates. оно должно строго совпадать с названием таблицы с которой устанавливается связь?
+
 class Transactions(Base):
     __tablename__ = "transactions"
 
@@ -45,7 +47,7 @@ class Transactions(Base):
     transaction_types = relationship('TransactionTypes', back_populates='transactions')
 
 
-sqlite_file_name = "database.db"
+sqlite_file_name = "../database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 connect_args = {"check_same_thread": False}
