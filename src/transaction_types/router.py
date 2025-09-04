@@ -3,6 +3,7 @@ from http.client import HTTPException
 from fastapi import APIRouter, Depends
 from sqlalchemy import update
 from sqlalchemy.orm import Session
+from typing import List
 
 from transaction_types.models import TransactionTypes
 from transaction_types.schemas import TransactionTypesResponse, TransactionTypesCreate, TransactionTypesUpdate
@@ -12,14 +13,14 @@ from transactions.models import Transactions
 router = APIRouter(prefix='/transaction_types', tags=['ТИПЫ ТРАНЗАКЦИЙ'])
 
 @router.post("/", response_model=TransactionTypesResponse)
-def create_tr_types(trtypes: TransactionTypesCreate, session: Session = Depends(get_db)):
+async def create_tr_types(trtypes: TransactionTypesCreate, session: Session = Depends(get_db)):
     db_trtypes = TransactionTypes(
         name=trtypes.name,
         description=trtypes.description
     )
     session.add(db_trtypes)
-    session.commit()
-    session.refresh(db_trtypes)
+    await session.commit()
+    await session.refresh(db_trtypes)
     return db_trtypes
 
 @router.put("/{update_id}", response_model=TransactionTypesResponse)
@@ -37,7 +38,7 @@ def update_tr_types(update_id: int, trtypes: TransactionTypesUpdate, session: Se
     session.refresh(db_trtypes)
     return db_trtypes
 
-@router.get("/", response_model=list[TransactionTypesResponse])
+@router.get("/", response_model=List[TransactionTypesResponse])
 def get_all_types(session: Session = Depends(get_db)):
     db_trtypes = session.query(TransactionTypes).all()
     return db_trtypes

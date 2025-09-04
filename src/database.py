@@ -8,11 +8,14 @@ from passlib.context import CryptContext
 
 class Base(DeclarativeBase): pass
 
-sqlite_file_name = "username:password@localhost:5432/mydatabase"
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql+asyncpg:///{sqlite_file_name}"
-    )
+sqlite_file_name = "finuser:pas1@localhost:5432/mydb"
+# DATABASE_URL = os.getenv(
+#     "DATABASE_URL",
+#     "postgresql+asyncpg:///{sqlite_file_name}"
+#     )
+
+DATABASE_URL = "postgresql+asyncpg://finuser:pas1@localhost:5432/mydb"
+
 engine = create_async_engine(
     DATABASE_URL,
     echo=True,
