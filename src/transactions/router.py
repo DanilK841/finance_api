@@ -5,11 +5,13 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import update
 from sqlalchemy.orm import Session, joinedload
 
-from src.classes import TransactionTypesResponse, TransactionTypesCreate, TransactionTypesUpdate, TransactionResponse, \
-    TransactionCreate, UserTransactions, TransactionUpdate
-from src.database import get_db, Transactions, TransactionTypes, Users
+from src.transaction_types.models import TransactionTypes
+from src.transactions.models import Transactions
+from src.transactions.schemas import TransactionResponse, TransactionCreate, UserTransactions, TransactionUpdate
+from src.database import get_db
+from src.users.models import Users
 
-router = APIRouter(prefix='transaction', tags=['ТРАНЗАКЦИИ'])
+router = APIRouter(prefix='/transaction', tags=['ТРАНЗАКЦИИ'])
 
 @router.post("/trans/", response_model=TransactionResponse)
 def create_transaction(trans: TransactionCreate, session: Session = Depends(get_db)):

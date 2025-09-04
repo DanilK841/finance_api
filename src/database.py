@@ -1,68 +1,35 @@
-from sqlalchemy import create_engine
+import os
+
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy import Column, Integer, String, DateTime, Numeric, ForeignKey
-from sqlalchemy.orm import relationship, sessionmaker
-from datetime import datetime
+from passlib.context import CryptContext
+
 
 
 class Base(DeclarativeBase): pass
 
+sqlite_file_name = "username:password@localhost:5432/mydatabase"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "postgresql+asyncpg:///{sqlite_file_name}"
+    )
 
-class Users(Base):
-    __tablename__ = "users"
+# Настройка хеширования
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    password = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=True)
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
-    transactions = relationship('Transactions', back_populates='user')
-
-class TransactionTypes(Base):
-    __tablename__ = "transaction_types"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    description = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-
-    transactions = relationship('Transactions', back_populates='transaction_types')
-
-# а где и как хранится поле transactions
-# на что влияет параметр back_populates. оно должно строго совпадать с названием таблицы с которой устанавливается связь?
-
-class Transactions(Base):
-    __tablename__ = "transactions"
-
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    type_id = Column(Integer, ForeignKey('transaction_types.id'))
-    amount = Column(Numeric, nullable=False)
-    category = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    status = Column(String, nullable=False)
-
-    user = relationship('Users', back_populates='transactions')
-    transaction_types = relationship('TransactionTypes', back_populates='transactions')
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
 
 
-sqlite_file_name = "../database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-
-connect_args = {"check_same_thread": False}
-# использовал без понимания. тут про подключение. по умолчанию может коннектится только тот кто сооздал, а этот параметр отключает такое поведение
-engine = create_engine(sqlite_url, connect_args=connect_args)
-
-def create_db_and_tables():
-    Base.metadata.create_all(engine)
-
-# тут бы проговорить что происходит
-# каким-то образом происходит подключение к бд видимо
-SessionLocal = sessionmaker(autoflush=False, bind=engine)
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+            await session.commit()
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()

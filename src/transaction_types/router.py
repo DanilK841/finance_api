@@ -4,10 +4,12 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from src.classes import TransactionTypesResponse, TransactionTypesCreate, TransactionTypesUpdate
-from src.database import get_db, Transactions, TransactionTypes
+from src.transaction_types.models import TransactionTypes
+from src.transaction_types.schemas import TransactionTypesResponse, TransactionTypesCreate, TransactionTypesUpdate
+from src.database import get_db
+from src.transactions.models import Transactions
 
-router = APIRouter(prefix='transaction_types', tags=['ТИПЫ ТРАНЗАКЦИЙ'])
+router = APIRouter(prefix='/transaction_types', tags=['ТИПЫ ТРАНЗАКЦИЙ'])
 
 @router.post("/", response_model=TransactionTypesResponse)
 def create_tr_types(trtypes: TransactionTypesCreate, session: Session = Depends(get_db)):

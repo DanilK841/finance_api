@@ -5,21 +5,22 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from src.classes import UserResponse, UserCreate, UserUpdate
-from src.database import get_db, Users, Transactions
+from src.transactions.models import Transactions
+from src.users.models import Users
+from src.users.schemas import UserResponse, UserCreate, UserUpdate
+from src.database import get_db, get_password_hash
 
-router = APIRouter(prefix='user', tags=['ПОЛЬЗОВАТЕЛИ'])
+router = APIRouter(prefix='/user', tags=['ПОЛЬЗОВАТЕЛИ'])
 # tags - for documentation
 # prefix - for url
 
 
 @router.post("/", response_model=UserResponse)
-# как правильно описать процесс который тут вызван
-# session: Session = Depends(get_db)
 def create_user(user: UserCreate, session: Session = Depends(get_db)):
+    hashed_password = get_password_hash(user.password)
     db_user = Users(
         name=user.name,
-        password=user.password
+        password=hashed_password
     )
     session.add(db_user)
     session.commit()
@@ -31,7 +32,7 @@ def update_user(user_id: int, user: UserUpdate, session: Session = Depends(get_d
 
     user_db = session.query(Users).filter(Users.id == user_id).first()
     name = user.name if user.name else user_db.name
-    password = user.password if user.password else user_db.password
+    password = get_password_hash(user.password) if user.password else user_db.password
 
     update_stmt = update(Users).where(Users.id == user_id).values(
             name= name,
