@@ -4,10 +4,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from src.transaction_types.models import TransactionTypes
-from src.transaction_types.schemas import TransactionTypesResponse, TransactionTypesCreate, TransactionTypesUpdate
-from src.database import get_db
-from src.transactions.models import Transactions
+from transaction_types.models import TransactionTypes
+from transaction_types.schemas import TransactionTypesResponse, TransactionTypesCreate, TransactionTypesUpdate
+from database import get_db
+from transactions.models import Transactions
 
 router = APIRouter(prefix='/transaction_types', tags=['ТИПЫ ТРАНЗАКЦИЙ'])
 

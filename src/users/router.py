@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 
-from src.transactions.models import Transactions
-from src.users.models import Users
-from src.users.schemas import UserResponse, UserCreate, UserUpdate
-from src.database import get_db, get_password_hash
+from transactions.models import Transactions
+from users.models import Users
+from users.schemas import UserResponse, UserCreate, UserUpdate
+from database import get_db, get_password_hash
 
 router = APIRouter(prefix='/user', tags=['ПОЛЬЗОВАТЕЛИ'])
 # tags - for documentation

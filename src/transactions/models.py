@@ -3,7 +3,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Numeric, ForeignKey
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from src.database import Base
+from database import Base
 
 
 class Transactions(Base):
