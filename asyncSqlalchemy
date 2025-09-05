@@ -1,0 +1,92 @@
+# Ссылки на документацию SQLAlchemy по асинхронным запросам
+
+## Основные разделы документации:
+
+### 1. **Официальная документация по асинхронному SQLAlchemy**
+**🔗 Основная страница**:  
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html)
+
+### 2. **Ключевые разделы**:
+
+#### **Asyncio Integration** (основной гайд):
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncio-integration](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncio-integration)
+
+#### **AsyncEngine and AsyncConnection**:
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncengine-and-asyncconnection](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncengine-and-asyncconnection)
+
+#### **AsyncSession** (самое важное!):
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asynciosession](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asynciosession)
+
+#### **Running Synchronous Methods and Functions under Async**:
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#running-synchronous-methods-and-functions-under-async](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#running-synchronous-methods-and-functions-under-async)
+
+### 3. **Примеры кода**:
+
+#### **Basic Async Usage**:
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#basic-async-usage](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#basic-async-usage)
+
+#### **Async Queries**:
+```python
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+async with AsyncSession(engine) as session:
+    result = await session.execute(
+        select(User).where(User.name == "some name")
+    )
+    user = result.scalar_one()
+```
+
+### 4. **Миграция с синхронного на асинхронный код**:
+
+#### **Migration from Synchronous to Asynchronous**:
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#migration-from-synchronous-to-asynchronous](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#migration-from-synchronous-to-asynchronous)
+
+### 5. **Типичные ошибки и решения**:
+
+#### **Common Pitfalls**:
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#common-pitfalls](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#common-pitfalls)
+
+### 6. **Async ORM Querying**:
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#async-orm-querying](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#async-orm-querying)
+
+### 7. **Async Relationships and Lazy Loading**:
+[https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#async-relationships-and-lazy-loading](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#async-relationships-and-lazy-loading)
+
+## Краткая выжимка из документации:
+
+### Основные правила:
+1. **Всегда используйте `AsyncSession`** вместо обычного `Session`
+2. **Все ORM операции должны быть с `await`**:  
+   - `await session.execute(query)`
+   - `await session.commit()`
+   - `await session.refresh()`
+   - `await session.close()`
+
+3. **Используйте `select()` вместо `query()`**:
+```python
+# Правильно (async)
+result = await session.execute(select(User).where(User.id == 1))
+user = result.scalar_one()
+
+# Неправильно (sync)
+user = session.query(User).filter(User.id == 1).first()
+```
+
+4. **Для отношений используйте eager loading**:
+```python
+from sqlalchemy.orm import selectinload
+
+result = await session.execute(
+    select(User)
+    .options(selectinload(User.posts))
+    .where(User.id == 1)
+)
+```
+
+## Полезные ссылки:
+
+- **Async API Reference**: [https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#api-reference](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#api-reference)
+- **Tutorial**: [https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#tutorial](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#tutorial)
+
+Обязательно почитайте раздел **"Common Pitfalls"** - там описаны все типичные ошибки, включая ту, что у вас возникла с ленивой загрузкой отношений!

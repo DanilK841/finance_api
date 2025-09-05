@@ -54,35 +54,34 @@ async def get_trans(current_user: Annotated[Users, Depends(get_current_user)], t
     db_trans = result.scalar_one_or_none()
     return db_trans
 
-# @router.put("/transactions/{trans_id}", response_model=TransactionResponse)
-# def update_trans(current_user: Annotated[Users, Depends(get_current_user)], trans_id: int, trans: TransactionUpdate, session: Session = Depends(get_db)):
-#     db_trans = session.select(Transactions).filter(Transactions.id == trans_id).first()
-#     amount = trans.amount if trans.amount else db_trans.amount
-#     if amount < 0:
-#         raise HTTPException(status_code=404, detail="Amount must be greater than 0")
-#     category = trans.category if trans.category else db_trans.category
-#     status = trans.status if trans.status else db_trans.status
-#     type_id = trans.type_id if trans.type_id else db_trans.type_id
-#     trans_type = session.query(TransactionTypes).filter(TransactionTypes.id == type_id).first()
-#     if not trans_type:
-#         raise HTTPException(status_code=404, detail="Type transactions not found")
-#
-#
-#     update_stmt = update(Transactions).where(Transactions.id == trans_id).values(
-#         amount=amount,
-#         category=category,
-#         status=status,
-#         type_id=type_id
-#     )
-#     session.execute(update_stmt)
-#     session.commit()
-#     session.refresh(db_trans)
-#     return db_trans
+@router.put("/transactions/{trans_id}", response_model=TransactionResponse)
+async def update_trans(current_user: Annotated[Users, Depends(get_current_user)], trans_id: int, trans: TransactionUpdate, session: Session = Depends(get_db)):
+    db_trans = await session.get(Transactions, trans_id)
+    amount = trans.amount if trans.amount else db_trans.amount
+    if amount < 0:
+        raise HTTPException(status_code=404, detail="Amount must be greater than 0")
+    category = trans.category if trans.category else db_trans.category
+    status = trans.status if trans.status else db_trans.status
+    type_id = trans.type_id if trans.type_id else db_trans.type_id
+    trans_type = await session.get(TransactionTypes, type_id)
+    if not trans_type:
+        raise HTTPException(status_code=404, detail="Type transactions not found")
+
+    update_stmt = update(Transactions).where(Transactions.id == trans_id).values(
+        amount=amount,
+        category=category,
+        status=status,
+        type_id=type_id
+    )
+    await session.execute(update_stmt)
+    await session.commit()
+    await session.refresh(db_trans)
+    return db_trans
 
 @router.delete("/transactions/{trans_id}")
-def delete_trans(trans_id: int, session: Session = Depends(get_db)):
-    db_trans = session.query(Transactions).filter(Transactions.id == trans_id).first()
+async def delete_trans(trans_id: int, session: Session = Depends(get_db)):
+    db_trans = await session.get(Transactions, trans_id)
     # db_trans = Transactions.query.get_or_404(trans_id)
-    session.delete(db_trans)
-    session.commit()
+    await session.delete(db_trans)
+    await session.commit()
     return {"msg":f"Delete transaction with id {trans_id} succes"}
