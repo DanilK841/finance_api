@@ -1,4 +1,4 @@
-from database import Base
+from src.database import Base
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -15,6 +15,10 @@ class Users(Base):
     password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, nullable=True)
+
+    email = Column(String, nullable=True, unique=True)
+
+
 
     transactions = relationship('Transactions', back_populates='user')
 

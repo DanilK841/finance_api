@@ -86,8 +86,6 @@ async def create_user(user: UserCreate, session: Session = Depends(get_db)):
         password=hashed_password
     )
 
-    print(user.name)
-
     session.add(db_user)
     await session.commit()
     await session.refresh(db_user)

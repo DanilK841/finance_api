@@ -4,7 +4,10 @@
 ~~почитать - https://fastapi.tiangolo.com/advanced/events/~~
 почитать статью по алхимии
 
-тз 2
+access, refresh  token
+add refresh token
+
+
 
 
 
