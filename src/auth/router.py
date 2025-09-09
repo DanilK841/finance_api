@@ -6,28 +6,29 @@ from sqlalchemy.orm import Session
 from typing import List
 from typing_extensions import Annotated, Optional
 from datetime import datetime, timedelta, timezone
-
+import os
 import jwt
 from jwt.exceptions import InvalidTokenError
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from database import get_db, get_password_hash, verify_password
+from src.database import get_db, get_password_hash, verify_password
 
-from transactions.models import Transactions
-from users.models import Users
-from users.schemas import UserResponse
-from auth.schemas import Token
+from src.transactions.models import Transactions
+from src.users.models import Users
+from src.users.schemas import UserResponse
+from src.auth.schemas import Token
 
+from dotenv import load_dotenv
 
-
+load_dotenv()
 router = APIRouter(prefix='/auth', tags=['АВТОРИЗАЦИЯ'])
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
-SECRET_KEY_ACCESS = "08108f97259f8c8874533f26d9404d680f201ffdf2ee2a2b2ee5d5b5aed9cccf"
-SECRET_KEY_REFRESH = "f901c42e07a0388d515f569d2d3b1bcbf1eb6dc4608e22ed63eac49e51e41249"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 3
+SECRET_KEY_ACCESS = os.getenv("SECRET_KEY_ACCESS")
+SECRET_KEY_REFRESH = os.getenv("SECRET_KEY_REFRESH")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS"))
 
 async def authenticate_user(username: str, password: str, session):
     user = (await session.execute(select(Users).where(Users.name == username))).scalar_one_or_none()

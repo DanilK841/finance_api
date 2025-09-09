@@ -7,13 +7,13 @@ from typing import List
 from typing_extensions import Annotated, Optional
 from datetime import datetime, timedelta, timezone
 
-from database import get_db
+from src.database import get_db
 
-from verification_email.service import EmailService
-from verification_email.redis_util import get_redis
-from verification_email.verification_service import VerificationService
-from auth.router import get_current_user
-from users.models import Users
+from src.verification_email.service import EmailService
+from src.verification_email.redis_util import get_redis
+from src.verification_email.verification_service import VerificationService
+from src.auth.router import get_current_user
+from src.users.models import Users
 
 router = APIRouter(prefix='/verification-email', tags=['ВЕРИФИКАЦИЯ ПОЧТЫ'])
 

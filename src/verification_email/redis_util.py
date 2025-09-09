@@ -1,7 +1,10 @@
 import redis.asyncio as redis
 from contextlib import asynccontextmanager
+from dotenv import load_dotenv
+import os
 
-REDIS_URL = "redis://localhost:6379"
+load_dotenv()
+REDIS_URL = os.getenv("REDIS_URL")
 
 async def init_redis():
     return await redis.from_url(REDIS_URL, encoding="utf-8", decode_responses=True)

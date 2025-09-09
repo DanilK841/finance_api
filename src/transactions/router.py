@@ -7,20 +7,21 @@ from sqlalchemy import update
 from sqlalchemy.orm import Session, joinedload, selectinload
 from sqlalchemy import select, update, delete
 
-from transaction_types.models import TransactionTypes
-from transactions.models import Transactions
-from transactions.schemas import TransactionResponse, TransactionCreate, UserTransactions, TransactionUpdate
-from users.schemas import UserResponse
-from database import get_db
-from users.models import Users
+from src.transaction_types.models import TransactionTypes
+from src.transactions.models import Transactions
+from src.transactions.schemas import TransactionResponse, TransactionCreate, UserTransactions, TransactionUpdate
+from src.users.schemas import UserResponse
+from src.database import get_db
+from src.users.models import Users
 
-from auth.router import get_current_user
+from src.auth.router import get_current_user
 
 router = APIRouter(prefix='/transaction', tags=['ТРАНЗАКЦИИ'])
 
 @router.post("/trans/", response_model=TransactionResponse)
-async def create_transaction(trans: TransactionCreate, session: Session = Depends(get_db)):
-    user = session.get(Users, trans.user_id)
+async def create_transaction(current_user: Annotated[Users, Depends(get_current_user)],trans: TransactionCreate, session: Session = Depends(get_db)):
+
+    user = current_user
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     trans_type = session.get(TransactionTypes, trans.type_id)
@@ -45,6 +46,8 @@ async def get_user_trans(current_user: Annotated[Users, Depends(get_current_user
     db_user_transactions = db_user_transactions_stmt.unique().scalar_one_or_none()
     if not db_user_transactions:
         raise HTTPException(status_code=404, detail="User not found")
+    if db_user_transactions.user_id != current_user.id:
+        raise HTTPException(status_code=401, detail="This transactions belong to another user")
     return UserTransactions.model_validate(db_user_transactions)
 
 @router.get("/{trans_id}", response_model=TransactionResponse)
@@ -52,11 +55,15 @@ async def get_trans(current_user: Annotated[Users, Depends(get_current_user)], t
     # db_user = session.query(Users).options(joinedload(Users.transactions)).filter(Users.id == user_id).first()
     result = await session.execute(select(Transactions).where(Transactions.id == trans_id).options(selectinload(Transactions.transaction_types)))
     db_trans = result.scalar_one_or_none()
+    if db_trans.user_id != current_user.id:
+        raise HTTPException(status_code=401, detail="This transactions belong to another user")
     return db_trans
 
 @router.put("/transactions/{trans_id}", response_model=TransactionResponse)
 async def update_trans(current_user: Annotated[Users, Depends(get_current_user)], trans_id: int, trans: TransactionUpdate, session: Session = Depends(get_db)):
     db_trans = await session.get(Transactions, trans_id)
+    if db_trans.user_id != current_user.id:
+        raise HTTPException(status_code=401, detail="This transactions belong to another user")
     amount = trans.amount if trans.amount else db_trans.amount
     if amount < 0:
         raise HTTPException(status_code=404, detail="Amount must be greater than 0")

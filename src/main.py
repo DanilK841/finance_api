@@ -9,13 +9,13 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import select, update, delete
 
-from database import *
+from src.database import *
 
-from users.router import router as users_router
-from transaction_types.router import router as transaction_types_router
-from transactions.router import router as transaction
-from auth.router import router as auth
-from verification_email.router import router as verification_email
+from src.users.router import router as users_router
+from src.transaction_types.router import router as transaction_types_router
+from src.transactions.router import router as transaction
+from src.auth.router import router as auth
+from src.verification_email.router import router as verification_email
 
 
 @asynccontextmanager

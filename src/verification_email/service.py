@@ -3,14 +3,16 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import os
 from typing import List
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class EmailService:
     def __init__(self):
-        self.smtp_server = os.getenv("SMTP_SERVER", "smtp.mail.ru")
-        self.smtp_port = int(os.getenv("SMTP_PORT", 587))
-        self.username = os.getenv("SMTP_USERNAME","kolm-danil@mail.ru")
-        self.password = os.getenv("SMTP_PASSWORD","RTX1ZSLvgTs1wCigtzl3")
+        self.smtp_server = os.getenv("SMTP_SERVER")
+        self.smtp_port = int(os.getenv("SMTP_PORT"))
+        self.username = os.getenv("SMTP_USERNAME")
+        self.password = os.getenv("SMTP_PASSWORD")
 
     async def send_email(self, to_email: str, subject: str, body: str):
         msg = MIMEMultipart()

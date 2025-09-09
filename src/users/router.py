@@ -7,11 +7,11 @@ from typing import List
 from typing_extensions import Annotated, Optional
 from datetime import datetime, timedelta, timezone
 
-from database import get_db
+from src.database import get_db
 
-from transactions.models import Transactions
-from users.models import Users
-from users.schemas import UserResponse, UserCreate, UserUpdate
+from src.transactions.models import Transactions
+from src.users.models import Users
+from src.users.schemas import UserResponse, UserCreate, UserUpdate
 
 
 

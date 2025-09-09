@@ -4,17 +4,23 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import DeclarativeBase
 from passlib.context import CryptContext
 
+from dotenv import load_dotenv
 
+load_dotenv()
+
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+POSTGRES_DB = os.getenv("POSTGRES_DB_URL")
 
 class Base(DeclarativeBase): pass
 
-sqlite_file_name = "finuser:pas1@localhost:5432/mydb"
+sqlite_file_name = f"{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_DB}"
 # DATABASE_URL = os.getenv(
 #     "DATABASE_URL",
 #     "postgresql+asyncpg:///{sqlite_file_name}"
 #     )
 
-DATABASE_URL = "postgresql+asyncpg://finuser:pas1@localhost:5432/mydb"
+DATABASE_URL = f"postgresql+asyncpg://{sqlite_file_name}"
 
 engine = create_async_engine(
     DATABASE_URL,

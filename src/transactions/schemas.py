@@ -2,8 +2,8 @@ from decimal import Decimal
 from typing import Optional, List
 from pydantic import BaseModel, ConfigDict, Field
 
-from transaction_types.schemas import TransactionTypesResponse
-from users.schemas import UserResponse
+from src.transaction_types.schemas import TransactionTypesResponse
+from src.users.schemas import UserResponse
 
 
 class TransactionBase(BaseModel):
@@ -12,7 +12,6 @@ class TransactionBase(BaseModel):
     status: str
 
 class TransactionCreate(TransactionBase):
-    user_id: int
     type_id: int
 
 class TransactionResponse(TransactionBase):
