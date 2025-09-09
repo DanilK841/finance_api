@@ -5,11 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a4306f45-6067-4cf2-b8c1-ac1e87474a5b" name="Changes" comment="mistake with connect to database">
+      <change afterPath="$PROJECT_DIR$/src/auth/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auth/router.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/auth/schemas.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/verification_email/router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/email_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/verification_email/service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/redis_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/verification_email/redis_util.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/transaction_types/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transaction_types/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/transactions/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transactions/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transactions/router.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transactions/router.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/users/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/users/router.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/router.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/todo.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/users/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/users/schemas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/verification_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/verification_email/verification_service.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

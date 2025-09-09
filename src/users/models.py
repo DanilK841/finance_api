@@ -1,5 +1,5 @@
-from src.database import Base
-from sqlalchemy import Column, Integer, String, DateTime
+from database import Base
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -17,6 +17,7 @@ class Users(Base):
     updated_at = Column(DateTime, nullable=True)
 
     email = Column(String, nullable=True, unique=True)
+    is_active = Column(Boolean, default=False)
 
 
 

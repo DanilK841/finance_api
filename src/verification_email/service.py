@@ -7,10 +7,10 @@ from typing import List
 
 class EmailService:
     def __init__(self):
-        self.smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+        self.smtp_server = os.getenv("SMTP_SERVER", "smtp.mail.ru")
         self.smtp_port = int(os.getenv("SMTP_PORT", 587))
-        self.username = os.getenv("SMTP_USERNAME","fastapifinance111@inbox.ru")
-        self.password = os.getenv("SMTP_PASSWORD","w)yYK5X-G&'Z)Nr")
+        self.username = os.getenv("SMTP_USERNAME","kolm-danil@mail.ru")
+        self.password = os.getenv("SMTP_PASSWORD","RTX1ZSLvgTs1wCigtzl3")
 
     async def send_email(self, to_email: str, subject: str, body: str):
         msg = MIMEMultipart()

@@ -18,7 +18,7 @@ DATABASE_URL = "postgresql+asyncpg://finuser:pas1@localhost:5432/mydb"
 
 engine = create_async_engine(
     DATABASE_URL,
-    echo=True,
+    echo=False,
     future=True,
     pool_size=20,
     max_overflow=0

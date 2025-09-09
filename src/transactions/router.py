@@ -14,7 +14,7 @@ from users.schemas import UserResponse
 from database import get_db
 from users.models import Users
 
-from users.router import get_current_user
+from auth.router import get_current_user
 
 router = APIRouter(prefix='/transaction', tags=['ТРАНЗАКЦИИ'])
 
